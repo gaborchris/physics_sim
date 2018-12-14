@@ -20,20 +20,21 @@ class Interaction:
     def apply_force(self):
         x = 0
         for charge in self.charges:
-            forcex = 0
-            forcey = 0
-            for other in self.charges:
-                if other is not charge:
-                    dist = max(self.get_distance(charge, other),1)
-                    force = 1/(dist**2) 
-                    angle = self.get_angle(charge, other)
-                    if other.charge is not charge.charge:
-                        forcex -= math.cos(angle)*force
-                        forcey -= math.sin(angle)*force
-                    else:
-                        forcex += math.cos(angle)*force
-                        forcey += math.sin(angle)*force
-            charge.update(self.force_const*forcex, self.force_const*forcey)
+            if charge.charge is not 1:
+                forcex = 0
+                forcey = 0
+                for other in self.charges:
+                    if other is not charge:
+                        dist = max(self.get_distance(charge, other),1)
+                        force = 1/(dist**2) 
+                        angle = self.get_angle(charge, other)
+                        if other.charge is not charge.charge: 
+                            forcex -= math.cos(angle)*force*1/(1+100*2.71**(-dist/5))
+                            forcey -= math.sin(angle)*force*1/(1+100*2.71**(-dist/5))
+                        else:
+                            forcex += math.cos(angle)*force
+                            forcey += math.sin(angle)*force
+                charge.update(self.force_const*forcex, self.force_const*forcey)
 
 
     def get_distance(self,charge1, charge2):
