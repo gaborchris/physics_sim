@@ -1,45 +1,51 @@
 from src import interactions
 from src.charge import Charge
+from src import container
 import pygame
 import time
 import random as rand
+import game
+
+
+def NewCharge(self, num, size=20):
+    pass
+
+def GetRandCharges(num, size=20):
+    charges = [Charge(rand.randint(0,100) + 450, rand.randint(0,100) + 450, size, -1) for _ in range(num)]
+    return charges
+
+def GetEdgeCharges(x1, y1, x2, y2):
+    charges = []
+    charges += [Charge(x1, y1, 20)]
+    charges += [Charge(x1, y2, 20)]
+    charges += [Charge(x2, y1, 20)]
+    charges += [Charge(x2, y2, 20)]
+    return charges
+
+
+def SetRandCharges(self):
+    self.charges = [Charge(rand.randint(0,100) + 400, rand.randint(0,100) + 400, 20, -1) for _ in range(rand.randint(3,7))]
 
 
 if __name__ == "__main__":
     (width, height) = (1000,1000)
     background_color = (255,255,255)
-    screen = pygame.display.set_mode((width,height))
-    pygame.display.set_caption('Tutorial 1')
-
-    a = Charge(20 + 100,30 + 100, 10)
-    b = Charge(30 + 100,30 + 100, 10)
-    c = Charge(25 + 100,25 + 100, 10)
-    d = Charge(30 + 100,25 + 100, 10)
-    e = Charge(27 + 100,21 + 100, 10)
-
-    charges = [Charge(rand.randint(0,100) + 500, rand.randint(0,100) + 500, 20) for x in range(0, 5)]
-    env = interactions.Interaction(charges, 10)
-
-
-    running = True
-    while running:
-        time.sleep(0.01)
-        screen.fill(background_color)
-
-        for charge in charges:
-            charge.draw(screen)
-
-        pygame.display.flip()
+    x1 = 200
+    y1 = 200
+    x2 = 800
+    y2 = 800
+    ballsize = 10
+    charges = GetRandCharges(3, ballsize)
+    env = interactions.Interaction(10)
+    env.new_charges(charges)
+    boundary = container.Container(x1, y1, x2, y2, charges)
+    
+    sim = game.Simulation(width,height, background_color, charges, env, boundary, size_def=ballsize)
 
 
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_SPACE:
-                    charges = [Charge(rand.randint(0,100) + 500, rand.randint(0,100) + 500, 20) for x in range(0, 5)]
-                    env = interactions.Interaction(charges, 10)
+    while sim.running:
+        sim.time_step()
 
-        env.apply_force()
-        #a.update(0.1,0.2)
+
+
 

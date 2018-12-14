@@ -3,7 +3,7 @@ import math
 import random
 
 class Charge:
-    def __init__(self, x, y, size):
+    def __init__(self, x, y, size, charge):
         self.x = x*1.0 
         self.y = y*1.0
         self.speed_x = 0.0 
@@ -11,6 +11,7 @@ class Charge:
         self.size = size
         self.color = (0,0,255)
         self.thickness = 3
+        self.charge = charge
 
     def draw(self, screen):
         pygame.draw.circle(screen, self.color, (int(self.x), int(self.y)), self.size, self.thickness)
